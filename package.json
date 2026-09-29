@@ -1,7 +1,7 @@
 {
   "name": "dsh-archive-cleaner",
   "version": "0.1.0",
-  "description": "DeepSeek Harness plugin that permanently deletes archived sessions: log directory, projection cache, archive entry and workspace slot, so archived conversations disappear from the web sidebar and from disk. Adds a red \"Delete session\" row to each archived session's menu plus the /purge-archived command.",
+  "description": "DeepSeek Harness has no delete feature yet — archiving only hides a session and leaves its log on disk forever. This plugin adds the missing delete: permanently remove the archived sessions you no longer need, from the sidebar's session menu or with the /purge-archived command.",
   "type": "module",
   "main": "index.js",
   "exports": {
