@@ -1,10 +1,12 @@
 # dsh-archive-cleaner
 
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 插件：**把「已归档会话」真正从 Web 界面和磁盘上一起删掉。**
+DeepSeek Harness doesn't have a delete feature yet — this plugin gives you one, so you can permanently remove the archived sessions you no longer need.
 
-宿主自带的能力只到「归档 / 取消归档」——归档只是把会话藏进归档集合，日志文件永远留在磁盘上；
-而侧栏会把任何**不属于工作区**的会话继续列进「未分组」，所以单纯取消归档不是删除，
-只是把那行换了个地方显示。本插件补上缺的那一步。
+> 官方目前没有「删除会话」的功能：只能归档，而归档只是把它藏起来，日志文件永远留在磁盘上。
+> 本插件补上这个删除——把不需要的已归档会话彻底移除，侧栏和磁盘一起干净。
+
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 插件。宿主自带的能力只到「归档 / 取消归档」；
+侧栏还会把任何**不属于工作区**的会话继续列进「未分组」，所以单纯取消归档不是删除，只是把那行换了个地方显示。
 
 ---
 
@@ -109,7 +111,7 @@ node --test          # 用假 ctx + 临时 DSH_HOME 跑完整删除链路，不�
 
 ## English quickstart
 
-An installable DSH plugin that actually **deletes archived sessions** — log directory, projection cache,
+DeepSeek Harness has no delete feature yet — this installable plugin adds it. It really **deletes archived sessions** — log directory, projection cache,
 archive entry and workspace accounting — with a red **Delete session** row in the sidebar's session
 "..." menu (two-click confirm) and a `/purge-archived` slash command.
 
