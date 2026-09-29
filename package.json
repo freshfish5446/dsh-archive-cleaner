@@ -1,7 +1,7 @@
 {
   "name": "dsh-archive-cleaner",
   "version": "0.1.0",
-  "description": "彻底删除已归档会话：在侧栏「...」菜单里加一行「删除会话」，并提供 /purge-archived 命令，让归档日志从 Web 界面和磁盘上一起消失。DeepSeek Harness 插件。",
+  "description": "DeepSeek Harness plugin that permanently deletes archived sessions: log directory, projection cache, archive entry and workspace slot, so archived conversations disappear from the web sidebar and from disk. Adds a red \"Delete session\" row to each archived session's menu plus the /purge-archived command.",
   "type": "module",
   "main": "index.js",
   "exports": {
