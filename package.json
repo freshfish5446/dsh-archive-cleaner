@@ -1,0 +1,61 @@
+{
+  "name": "dsh-archive-cleaner",
+  "version": "0.1.0",
+  "description": "彻底删除已归档会话：在侧栏「...」菜单里加一行「删除会话」，并提供 /purge-archived 命令，让归档日志从 Web 界面和磁盘上一起消失。DeepSeek Harness 插件。",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "icon.png",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-commands": "^0.2.0-rc.1",
+    "@deepseek-ai/dsh-workspace": "^0.2.0-rc.1",
+    "@deepseek-ai/dsh-session-persistence": "^0.2.0-rc.1",
+    "@deepseek-ai/dsh-host-webserver": "^0.2.0-rc.1",
+    "@deepseek-ai/dsh-client-ui-renderer": "^0.2.0-rc.1",
+    "react": "^18.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freshfish5446/dsh-archive-cleaner.git"
+  },
+  "homepage": "https://github.com/freshfish5446/dsh-archive-cleaner#readme",
+  "bugs": {
+    "url": "https://github.com/freshfish5446/dsh-archive-cleaner/issues"
+  },
+  "author": "freshfish5446",  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "deepseek-harness",
+    "archive",
+    "session",
+    "cleanup"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

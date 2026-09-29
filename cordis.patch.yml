@@ -1,0 +1,5 @@
+# dsh-archive-cleaner bundle patch：宿主插件（删除已归档会话 + /purge-archived 命令）。
+# name 必须是真实包名，cordis 按它 import；id 是这条 loader entry 的键。
+- insert:
+    - id: archive-cleaner
+      name: dsh-archive-cleaner
