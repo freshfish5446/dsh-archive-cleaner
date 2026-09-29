@@ -31,6 +31,22 @@ async function makeHome({ files = true } = {}) {
   return { home, root, cachePath: join(cacheDir, `${ID}.json`), sessionDir: join(root, NAMESPACE, ID) }
 }
 
+/**
+ * 假 ctx 也必须像 cordis 一样较真：**没 inject 的 service 属性一旦被读就抛异常**。
+ * 这里曾经太宽松（任意属性都能读），漏掉了真 bug —— 插件读 ctx.sessionPersistence 却没把它
+ * 写进 inject，运行时直接 500，界面上只显示「删除失败」。加了这层 Proxy 后同类错误跑测试就会红。
+ */
+function strictCtx(raw) {
+  return new Proxy(raw, {
+    get(target, property, receiver) {
+      if (typeof property === 'string' && !(property in target)) {
+        throw new Error('cannot get property "' + property + '" without inject')
+      }
+      return Reflect.get(target, property, receiver)
+    },
+  })
+}
+
 /** 假宿主上下文：只实现插件真正用到的那几个面。 */
 function makeCtx(root, { archived = [ID], accounted = [ID] } = {}) {
   const state = { archived: [...archived] }
@@ -46,6 +62,7 @@ function makeCtx(root, { archived = [ID], accounted = [ID] } = {}) {
     },
     emit: () => {},
     logger: { warn: () => {} },
+    get: () => undefined,
     sessionPersistence: { root },
     commands: {
       register: (definition) => {
@@ -75,7 +92,7 @@ function makeCtx(root, { archived = [ID], accounted = [ID] } = {}) {
         })),
     },
   }
-  return { ctx, registered, state, workspaces }
+  return { ctx: strictCtx(ctx), registered, state, workspaces }
 }
 
 function signal() {
@@ -133,7 +150,7 @@ async function withHome(home, run) {
 
 test('导出与注入的服务', () => {
   assert.equal(plugin.name, 'archive-cleaner')
-  assert.deepEqual(plugin.inject, ['commands', 'workspaceRegistry', 'webServer'])
+  assert.deepEqual(plugin.inject, ['commands', 'workspaceRegistry', 'webServer', 'sessionPersistence'])
   assert.equal(typeof plugin.apply, 'function')
 })
 

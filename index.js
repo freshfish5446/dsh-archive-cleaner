@@ -24,7 +24,7 @@ import { join } from 'node:path'
 export const name = 'archive-cleaner'
 
 /** 依赖的宿主服务。 */
-export const inject = ['commands', 'workspaceRegistry', 'webServer']
+export const inject = ['commands', 'workspaceRegistry', 'webServer', 'sessionPersistence']
 
 /** 客户端走的 HTTP 前缀。 */
 const API_PREFIX = '/archive-cleaner/api'
@@ -41,8 +41,13 @@ function dshHome() {
 /** 会话日志根目录候选：宿主 persistence 自己的 root 最准，其余是兜底。 */
 function sessionRoots(ctx) {
   const roots = []
-  const persistenceRoot = ctx.sessionPersistence?.root
-  if (typeof persistenceRoot === 'string' && persistenceRoot.length > 0) roots.push(persistenceRoot)
+  // cordis 里没 inject 的 service 属性是「抛异常」而不是 undefined，?. 拦不住，必须 try。
+  try {
+    const persistenceRoot = ctx.sessionPersistence.root
+    if (typeof persistenceRoot === 'string' && persistenceRoot.length > 0) roots.push(persistenceRoot)
+  } catch {
+    /* 没拿到宿主 persistence 就退回默认根 */
+  }
   roots.push(join(dshHome(), 'sessions'))
   return [...new Set(roots)]
 }
@@ -250,9 +255,15 @@ async function handleApi(ctx, req, res) {
           return `ERROR ${why(error)}`
         }
       }
-      const persistence = ctx.sessionPersistence ?? {}
-      const stringFields = {}
-      for (const [key, value] of Object.entries(persistence)) if (typeof value === 'string') stringFields[key] = value
+      let persistenceKeys = []
+      let stringFields = {}
+      try {
+        const persistence = ctx.sessionPersistence
+        persistenceKeys = Object.keys(persistence)
+        for (const [key, value] of Object.entries(persistence)) if (typeof value === 'string') stringFields[key] = value
+      } catch (error) {
+        stringFields = { error: why(error) }
+      }
       const found = {}
       for (const id of [...ctx.workspaceRegistry.archivedSessionIds]) {
         found[id] = []
@@ -270,7 +281,7 @@ async function handleApi(ctx, req, res) {
         resolvedHome: dshHome(),
         sessionRoots: sessionRoots(ctx),
         rootsListing: Object.fromEntries(await Promise.all(sessionRoots(ctx).map(async (root) => [root, await readRoot(root)]))),
-        persistenceKeys: Object.keys(persistence),
+        persistenceKeys,
         persistenceStringFields: stringFields,
         archived: [...ctx.workspaceRegistry.archivedSessionIds],
         foundDirs: found,
