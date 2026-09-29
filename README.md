@@ -1,5 +1,7 @@
 # dsh-archive-cleaner
 
+[![npm version](https://img.shields.io/npm/v/dsh-archive-cleaner.svg)](https://www.npmjs.com/package/dsh-archive-cleaner)
+
 DeepSeek Harness doesn't have a delete feature yet — this plugin gives you one, so you can permanently remove the archived sessions you no longer need.
 
 > 官方目前没有「删除会话」的功能：只能归档，而归档只是把它藏起来，日志文件永远留在磁盘上。
