@@ -72,7 +72,7 @@ async function findSessionDirs(root, sessionId, found = []) {
       found.push(full)
       continue
     }
-    await findSessionDirs(root, sessionId, found)
+    await findSessionDirs(full, sessionId, found)
   }
   return found
 }
